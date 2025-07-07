@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: vacation_management
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: mysecretpassword # <--- CHANGE THIS PASSWORD
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./server/database.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      DATABASE_URL: postgres://user:mysecretpassword@db:5432/vacation_management # <--- CHANGE THIS PASSWORD
+      NODE_ENV: production
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:

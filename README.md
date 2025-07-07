@@ -94,6 +94,51 @@ VMI/
    npm install
    ```
 
+## Running with Docker
+
+You can run the entire stack (frontend, backend, and database) using Docker and Docker Compose. This is the fastest way to get started without installing Node.js or PostgreSQL locally.
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Quick Start
+
+1. **Clone the repository and navigate to the `VMI` directory:**
+   ```bash
+   cd VMI
+   ```
+
+2. **(Optional) Change the default database password:**
+   - Edit `docker-compose.yml` and update the `POSTGRES_PASSWORD` and `DATABASE_URL` fields for better security.
+
+3. **Start all services:**
+   ```bash
+   docker-compose up --build
+   ```
+   This will build and start three containers:
+   - `db` (PostgreSQL, port 5433 on host)
+   - `backend` (Express API, port 3001 on host)
+   - `frontend` (React app served by Nginx, port 80 on host)
+
+4. **Access the application:**
+   - Frontend: [http://localhost](http://localhost)
+   - Backend API: [http://localhost:3001](http://localhost:3001)
+   - Database: Host port `5433` (e.g., for connecting with a DB client)
+
+5. **Stop the stack:**
+   Press `Ctrl+C` in the terminal running Docker Compose, then run:
+   ```bash
+   docker-compose down
+   ```
+
+### Notes
+- The database is persisted in a Docker volume (`db_data`).
+- The initial schema and seed data are loaded from `server/database.sql`.
+- For production, always change the default database password in `docker-compose.yml` and `DATABASE_URL`.
+- You can customize ports in `docker-compose.yml` if needed.
+
 ## How to Run
 
 ### Start the Backend Server
